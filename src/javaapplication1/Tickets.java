@@ -171,6 +171,7 @@ public class Tickets extends JFrame implements ActionListener {
 			String ticketId = JOptionPane.showInputDialog(null, "Enter the ticket id to delete");
 			if (ticketId == null) {
 				JOptionPane.showMessageDialog(null, "Delete canceled!");
+				System.out.println("Delete canceled!");
 			}
 			else {
 				int result = JOptionPane.showConfirmDialog(null, "Confirm deletion of ticket id: " + ticketId + "?");
@@ -182,13 +183,13 @@ public class Tickets extends JFrame implements ActionListener {
 						JOptionPane.showMessageDialog(null, "Ticket id: " + ticketId + " deleted");
 					} 
 					else {
-						System.out.println("Ticket was either already deleted or doesn't exist!");
-						JOptionPane.showMessageDialog(null, "Ticket was either already deleted or doesn't exist!");
+						System.out.println("Ticket id " + ticketId + " was either already deleted or doesn't exist!");
+						JOptionPane.showMessageDialog(null, "Ticket id " + ticketId + " was either already deleted or doesn't exist!");
 					}
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "Delete canceled!");
-					System.out.println("Delete canceled!");
+					JOptionPane.showMessageDialog(null, "Deletion for ticket id " + ticketId + " was canceled!");
+					System.out.println("Deletion for ticket id " + ticketId + " was canceled!");
 				}
 			}
 		}
