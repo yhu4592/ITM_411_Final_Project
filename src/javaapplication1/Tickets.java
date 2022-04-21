@@ -34,6 +34,7 @@ public class Tickets extends JFrame implements ActionListener {
 	JMenuItem mnuItemUpdate;
 	JMenuItem mnuItemDelete;
 	JMenuItem mnuItemOpenTicket;
+	JMenuItem mnuItemViewAllTicket;
 	JMenuItem mnuItemViewTicket;
 
 	public Tickets(Boolean isAdmin, String userName) {
@@ -68,10 +69,21 @@ public class Tickets extends JFrame implements ActionListener {
 		// add to Ticket Main menu item
 		mnuTickets.add(mnuItemOpenTicket);
 
-		// initialize second sub menu item for Tickets main menu
-		mnuItemViewTicket = new JMenuItem("View Ticket");
-		// add to Ticket Main menu item
-		mnuTickets.add(mnuItemViewTicket);
+		if (chkIfAdmin) {
+			// initialize second sub menu item for Tickets main menu
+			mnuItemViewAllTicket = new JMenuItem("View All Tickets");
+			// add to Ticket Main menu item
+			mnuTickets.add(mnuItemViewAllTicket);
+		}
+		
+		else {
+			mnuItemViewTicket = new JMenuItem("View Ticket");
+			mnuTickets.add(mnuItemViewTicket);
+		}
+		
+		
+		
+		
 
 		// initialize any more desired sub menu items below
 
@@ -80,7 +92,15 @@ public class Tickets extends JFrame implements ActionListener {
 		mnuItemUpdate.addActionListener(this);
 		mnuItemDelete.addActionListener(this);
 		mnuItemOpenTicket.addActionListener(this);
-		mnuItemViewTicket.addActionListener(this);
+		if (chkIfAdmin) {
+			mnuItemViewAllTicket.addActionListener(this);
+		}
+		
+		else {
+			mnuItemViewTicket.addActionListener(this);
+		}
+		
+		
 
 		 /*
 		  * continue implementing any other desired sub menu items (like 
@@ -140,6 +160,24 @@ public class Tickets extends JFrame implements ActionListener {
 				System.out.println("Ticket cannot be created!!!");
 		}
 
+		else if (e.getSource() == mnuItemViewAllTicket) {
+
+			// retrieve all tickets details for viewing in JTable
+			try {
+				// Use JTable built in functionality to build a table model and
+				// display the table model off your result set!!!
+				// Users can only view their own tickets, admins can view ALL
+				JTable jt = new JTable(ticketsJTable.buildTableModel(dao.readRecords()));
+				jt.setBounds(30, 40, 200, 400);
+				JScrollPane sp = new JScrollPane(jt);
+				add(sp);
+				setVisible(true); // refreshes or repaints frame on screen
+
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
 		else if (e.getSource() == mnuItemViewTicket) {
 
 			// retrieve all tickets details for viewing in JTable
@@ -147,20 +185,11 @@ public class Tickets extends JFrame implements ActionListener {
 				// Use JTable built in functionality to build a table model and
 				// display the table model off your result set!!!
 				// Users can only view their own tickets, admins can view ALL
-				if (chkIfAdmin) {
-					JTable jt = new JTable(ticketsJTable.buildTableModel(dao.readRecords()));
-					jt.setBounds(30, 40, 200, 400);
-					JScrollPane sp = new JScrollPane(jt);
-					add(sp);
-					setVisible(true); // refreshes or repaints frame on screen
-				}
-				else {
-					JTable jt = new JTable(ticketsJTable.buildTableModel(dao.readRecords(userName)));
-					jt.setBounds(30, 40, 200, 400);
-					JScrollPane sp = new JScrollPane(jt);
-					add(sp);
-					setVisible(true); // refreshes or repaints frame on screen
-				}
+				JTable jt = new JTable(ticketsJTable.buildTableModel(dao.readRecords(userName)));
+				jt.setBounds(30, 40, 200, 400);
+				JScrollPane sp = new JScrollPane(jt);
+				add(sp);
+				setVisible(true); // refreshes or repaints frame on screen
 
 			} catch (SQLException e1) {
 				e1.printStackTrace();
@@ -195,7 +224,29 @@ public class Tickets extends JFrame implements ActionListener {
 		}
 		
 		else if (e.getSource() == mnuItemUpdate) {
-			String ticketName = JOptionPane.showInputDialog(null, "Enter the ticket id to close");
+			String ticketId = JOptionPane.showInputDialog(null, "Enter the ticket id to update: ");
+			if (ticketId == null || ticketId.length() == 0) {
+				JOptionPane.showMessageDialog(null, "Update canceled! Please enter a valid ticket id next time.");
+				System.out.println("Update canceled! Please enter a valid ticket id next time.");
+			}
+			else {
+				String ticketDesc = JOptionPane.showInputDialog(null, "Enter the new description: ");
+				if (ticketDesc == null || ticketDesc.length() == 0) {
+					JOptionPane.showMessageDialog(null, "Update canceled! Please enter a valid ticket description next time.");
+					System.out.println("Update canceled! Please enter a valid ticket description next time.");
+				}
+				else {
+					Boolean updated = dao.updateRecords(ticketId, ticketDesc);
+					if (updated) {
+						System.out.println("Ticket id " + ticketId + " was updated!");
+						JOptionPane.showMessageDialog(null, "Ticket id " + ticketId + " was updated!");
+					}
+					else {
+						System.out.println("Ticket id " + ticketId + " was either already deleted or doesn't exist!");
+						JOptionPane.showMessageDialog(null, "Ticket id " + ticketId + " was either already deleted or doesn't exist!");
+					}
+				}
+			}
 		}
 
 	}

@@ -178,18 +178,35 @@ public class Dao {
 						statement.executeUpdate("DELETE FROM yhu2_tickets WHERE ticket_id=" + ticketId);
 						delete = true;
 					}
-					//ResultSet resultSet = null;
-					//resultSet = statement.getGeneratedKeys();
-					//if (resultSet.next()) {
-						// retrieve first field in table
-					//	id = resultSet.getInt(1);
-					//}
 		
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				return delete;
+			}
+		}
+		
+		public Boolean updateRecords(String ticketId, String ticketDesc) {
+			Boolean update = false;
+			// Check if either field is empty and cancel ticket creation
+			if (ticketId==null || ticketDesc==null) {
+				return update;
+			} 
+			else {
+				try {
+					statement = getConnection().createStatement();
+					ResultSet rs = statement.executeQuery("SELECT * FROM yhu2_tickets WHERE ticket_id=" + ticketId);
+					if (rs.next()) {
+						statement.executeUpdate("UPDATE yhu2_tickets SET ticket_description='" + ticketDesc + "' WHERE ticket_id=" + ticketId);
+						update = true;
+					}
+		
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return update;
 			}
 		}
 }
