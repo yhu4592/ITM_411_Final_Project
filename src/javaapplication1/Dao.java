@@ -209,4 +209,26 @@ public class Dao {
 				return update;
 			}
 		}
+		
+		public Boolean closeRecords(String ticketId) {
+			Boolean closed = false;
+			try {
+				statement = getConnection().createStatement();
+				ResultSet rs = statement.executeQuery("SELECT * FROM yhu2_tickets WHERE ticket_id=" + ticketId);
+				if (rs.next()) {
+					if (rs.getString(4).equals("Yes")) {
+						return closed;
+					}
+					else {
+						statement.executeUpdate("UPDATE yhu2_tickets SET closed='Yes', end_date=CURRENT_TIMESTAMP WHERE ticket_id=" + ticketId);
+						closed = true;
+					}
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return closed;
+			
+		}
 }

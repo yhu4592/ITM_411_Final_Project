@@ -32,6 +32,7 @@ public class Tickets extends JFrame implements ActionListener {
 	// Sub menu item objects for all Main menu item objects
 	JMenuItem mnuItemExit;
 	JMenuItem mnuItemUpdate;
+	JMenuItem mnuItemClose;
 	JMenuItem mnuItemDelete;
 	JMenuItem mnuItemOpenTicket;
 	JMenuItem mnuItemViewAllTicket;
@@ -81,9 +82,8 @@ public class Tickets extends JFrame implements ActionListener {
 			mnuTickets.add(mnuItemViewTicket);
 		}
 		
-		
-		
-		
+		mnuItemClose = new JMenuItem("Close Ticket");
+		mnuAdmin.add(mnuItemClose);
 
 		// initialize any more desired sub menu items below
 
@@ -99,16 +99,7 @@ public class Tickets extends JFrame implements ActionListener {
 		else {
 			mnuItemViewTicket.addActionListener(this);
 		}
-		
-		
-
-		 /*
-		  * continue implementing any other desired sub menu items (like 
-		  * for update and delete sub menus for example) with similar 
-		  * syntax & logic as shown above
-		 */
-
-
+		mnuItemClose.addActionListener(this);
 	}
 
 	private void prepareGUI(Boolean chkIfAdmin) {
@@ -245,6 +236,24 @@ public class Tickets extends JFrame implements ActionListener {
 						System.out.println("Ticket id " + ticketId + " was either already deleted or doesn't exist!");
 						JOptionPane.showMessageDialog(null, "Ticket id " + ticketId + " was either already deleted or doesn't exist!");
 					}
+				}
+			}
+		}
+		else if(e.getSource() == mnuItemClose) {
+			String ticketId = JOptionPane.showInputDialog(null, "Enter the ticket id to close: ");
+			if (ticketId == null || ticketId.length() == 0) {
+				JOptionPane.showMessageDialog(null, "Close canceled! Please enter a valid ticket id next time.");
+				System.out.println("Close canceled! Please enter a valid ticket id next time.");
+			}
+			else {
+				Boolean closed = dao.closeRecords(ticketId);
+				if (closed) {
+					System.out.println("Ticket id " + ticketId + " was closed!");
+					JOptionPane.showMessageDialog(null, "Ticket id " + ticketId + " was closed!");
+				}
+				else {
+					System.out.println("Ticket id " + ticketId + " was either already closed, deleted, or doesn't exist!");
+					JOptionPane.showMessageDialog(null, "Ticket id " + ticketId + " was either already closed, deleted, or doesn't exist!");
 				}
 			}
 		}
