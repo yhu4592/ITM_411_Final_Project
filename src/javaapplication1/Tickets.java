@@ -262,6 +262,7 @@ public class Tickets extends JFrame implements ActionListener {
 				}
 			}
 		}
+		
 		else if (e.getSource() == mnuItemViewTicketID) {
 			String ticketId = JOptionPane.showInputDialog(null, "Enter the ticket id to open: ");
 			if (ticketId == null || ticketId.length() == 0) {
