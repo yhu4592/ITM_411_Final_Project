@@ -163,6 +163,18 @@ public class Dao {
 			}
 			return results;
 		}
+		
+		public ResultSet readRecordID(String ID) {
+			ResultSet results = null;
+			try {
+				statement = connect.createStatement();
+				results = statement.executeQuery("SELECT * FROM yhu2_tickets WHERE ticket_id='" + ID + "'");
+				//connect.close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			return results;
+		}
 	
 		public Boolean deleteRecords(String ticketId) {
 			Boolean delete = false;

@@ -37,6 +37,7 @@ public class Tickets extends JFrame implements ActionListener {
 	JMenuItem mnuItemOpenTicket;
 	JMenuItem mnuItemViewAllTicket;
 	JMenuItem mnuItemViewTicket;
+	JMenuItem mnuItemViewTicketID;
 
 	public Tickets(Boolean isAdmin, String userName) {
 		this.userName = userName;
@@ -78,12 +79,15 @@ public class Tickets extends JFrame implements ActionListener {
 		}
 		
 		else {
-			mnuItemViewTicket = new JMenuItem("View Ticket");
+			mnuItemViewTicket = new JMenuItem("View Your Tickets");
 			mnuTickets.add(mnuItemViewTicket);
 		}
 		
 		mnuItemClose = new JMenuItem("Close Ticket");
 		mnuAdmin.add(mnuItemClose);
+		
+		mnuItemViewTicketID = new JMenuItem("View Ticket (ID)");
+		mnuTickets.add(mnuItemViewTicketID);
 
 		// initialize any more desired sub menu items below
 
@@ -100,6 +104,7 @@ public class Tickets extends JFrame implements ActionListener {
 			mnuItemViewTicket.addActionListener(this);
 		}
 		mnuItemClose.addActionListener(this);
+		mnuItemViewTicketID.addActionListener(this);
 	}
 
 	private void prepareGUI(Boolean chkIfAdmin) {
@@ -239,7 +244,7 @@ public class Tickets extends JFrame implements ActionListener {
 				}
 			}
 		}
-		else if(e.getSource() == mnuItemClose) {
+		else if (e.getSource() == mnuItemClose) {
 			String ticketId = JOptionPane.showInputDialog(null, "Enter the ticket id to close: ");
 			if (ticketId == null || ticketId.length() == 0) {
 				JOptionPane.showMessageDialog(null, "Close canceled! Please enter a valid ticket id next time.");
@@ -257,7 +262,29 @@ public class Tickets extends JFrame implements ActionListener {
 				}
 			}
 		}
+		else if (e.getSource() == mnuItemViewTicketID) {
+			String ticketId = JOptionPane.showInputDialog(null, "Enter the ticket id to open: ");
+			if (ticketId == null || ticketId.length() == 0) {
+				JOptionPane.showMessageDialog(null, "View canceled! Please enter a valid ticket id next time.");
+				System.out.println("View canceled! Please enter a valid ticket id next time.");
+			}
+			else {
+				try {
+					// Use JTable built in functionality to build a table model and
+					// display the table model off your result set!!!
+					// Users can only view their own tickets, admins can view ALL
+					JTable jt = new JTable(ticketsJTable.buildTableModel(dao.readRecordID(ticketId)));
+					jt.setBounds(30, 40, 200, 400);
+					JScrollPane sp = new JScrollPane(jt);
+					add(sp);
+					setVisible(true); // refreshes or repaints frame on screen
 
+				} 
+				catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
 	}
 
 }
